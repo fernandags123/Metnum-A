@@ -1,0 +1,82 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOW+n2MKtmghbsHTIK6iCkM",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/fernandags123/Metnum-A/blob/main/GALAT.main\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "4gipw4RQLcX2"
+      },
+      "outputs": [],
+      "source": [
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "\n",
+        "def hitung_galat(nilai_sebenarnya, nilai_hampiran):\n",
+        "    galat_absolut = abs(nilai_sebenarnya - nilai_hampiran)\n",
+        "    galat_relatif = galat_absolut / abs(nilai_sebenarnya) if nilai_sebenarnya != 0 else None\n",
+        "    galat_persen = galat_relatif * 100 if galat_relatif is not None else None\n",
+        "    return galat_absolut, galat_relatif, galat_persen\n",
+        "\n",
+        "nilai_sebenarnya = float(input(\"Masukkan nilai sebenarnya: \"))\n",
+        "nilai_hampiran_list = [float(x) for x in input(\"Masukkan daftar nilai hampiran: \").split()]\n",
+        "\n",
+        "\n",
+        "data = []\n",
+        "for nh in nilai_hampiran_list:\n",
+        "    abs_err, rel_err, pct_err = hitung_galat(nilai_sebenarnya, nh)\n",
+        "    data.append([nh, abs_err, rel_err, pct_err])\n",
+        "\n",
+        "df = pd.DataFrame(data, columns=[\"Nilai Hampiran\", \"Galat Absolut\", \"Galat Relatif\", \"Galat Persen (%)\"])\n",
+        "\n",
+        "\n",
+        "print(\"\\n HASIL PERHITUNGAN GALAT \")\n",
+        "display(df.style.format({\n",
+        "    \"Galat Absolut\": \"{:.2f}\",\n",
+        "    \"Galat Relatif\": \"{:.2f}\",\n",
+        "    \"Galat Persen (%)\": \"{:.2f}\"\n",
+        "}).set_table_styles([\n",
+        "    {\"selector\": \"th\", \"props\": [(\"background-color\", \"#4CAF50\"), (\"color\", \"white\")]}\n",
+        "]))\n",
+        "\n",
+        "\n",
+        "plt.figure(figsize=(8,5))\n",
+        "plt.plot(df[\"Nilai Hampiran\"], df[\"Galat Absolut\"], marker='o', label=\"Galat Absolut\")\n",
+        "plt.plot(df[\"Nilai Hampiran\"], df[\"Galat Persen (%)\"], marker='s', label=\"Galat Persen (%)\")\n",
+        "plt.axhline(0, color=\"gray\", linestyle=\"--\")\n",
+        "plt.xlabel(\"Nilai Hampiran\")\n",
+        "plt.ylabel(\"Galat\")\n",
+        "plt.title(\"Grafik Galat vs Nilai Hampiran\")\n",
+        "plt.legend()\n",
+        "plt.grid(True)\n",
+        "plt.show()\n"
+      ]
+    }
+  ]
+}
